@@ -14,12 +14,16 @@ USAR_BANCO_REAL = all([
 ])
 
 if USAR_BANCO_REAL:
-    app.config[
-        "SQLALCHEMY_DATABASE_URI"] = f"mysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASS')}@{os.getenv('DB_URL')}/{os.getenv('DB_NAME')}"
+    app.config["SQLALCHEMY_DATABASE_URI"] = (
+        f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASS')}@"
+        f"{os.getenv('DB_URL')}/{os.getenv('DB_NAME')}"
+    )
     mensagem_db = "Banco de dados real conectado!"
 else:
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///fake.db"
     mensagem_db = "Usando database fake!"
+
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
 
@@ -35,7 +39,7 @@ class Aluno(db.Model):
 
 
 @app.route("/health", methods=["GET"])
-def home():
+def health_check():
     return jsonify({"status": "Servidor Rodando!", "database": mensagem_db})
 
 
@@ -43,14 +47,15 @@ def home():
 def cadastrar_aluno():
     data = request.get_json()
 
+    # Extrai os dados do JSON
     nome = data.get("nome")
     email = data.get("email")
     telefone = data.get("telefone")
     cpf = data.get("cpf")
-    data_nascimento = data.get("data-nascimento")
+    data_nascimento = data.get("data_nascimento")
     curso = data.get("curso")
 
-    if not nome or not email or not telefone or not cpf or not data_nascimento or not curso:
+    if not all([nome, email, telefone, cpf, data_nascimento, curso]):
         return jsonify({"error": "Todos os campos são obrigatórios"}), 400
 
     if USAR_BANCO_REAL:
