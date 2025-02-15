@@ -114,5 +114,10 @@ def deletar_aluno(aluno_id):
 
     return jsonify({"mensagem": "Aluno deletado com sucesso!"})
 
+# Rota de health check
+@app.route("/health", methods=["GET"])
+def health_check():
+    return jsonify({"mensagem": "Servidor Flask Rodando"}), 200
+
 if __name__ == "__main__":
     app.run(debug=True)
