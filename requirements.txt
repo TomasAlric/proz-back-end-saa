@@ -1,4 +1,4 @@
-Flask==3.0.0
-Flask-Cors==4.0.0
-Flask-SQLAlchemy==3.0.0
-pymysql
+flask
+flask-cors
+flask-sqlalchemy
+psycopg2-binary
