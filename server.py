@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 
 # Configuração do banco de dados PostgreSQL (real)
-# app.config["SQLALCHEMY_DATABASE_URI"] = "app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://<usuario>:<senha>@<host>:<porta>/<nome_do_banco>"
+# app.config["SQLALCHEMY_DATABASE_URI"] = "app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://<usuario>:<senha>@<host>:<porta>/<nome_do_banco>"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
@@ -33,7 +33,7 @@ with app.app_context():
 def verificar_banco():
     if "sqlite" in app.config["SQLALCHEMY_DATABASE_URI"]:
         return "fake"  # SQLite (fake database)
-    elif "postgresql" in app.config["SQLALCHEMY_DATABASE_URI"]:
+    elif "mysql" in app.config["SQLALCHEMY_DATABASE_URI"]:
         return "real"  # PostgreSQL (real database)
     return "unknown"  # Caso não seja SQLite ou PostgreSQL
 
